@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
     Random r;
     //ArrayList<String> celnames=new ArrayList<String>();
      String[] ans=new String[4];
-     int choose=0;
+
+    int choose=0;
      int correct;
     Integer[] images={
             R.drawable.kushina,
@@ -84,13 +87,19 @@ public class MainActivity extends AppCompatActivity {
                 Button button3=(Button) findViewById(R.id.button4);
 
                 //button.setText(name[choose]);
-
+                LinkedHashSet<String> LHS = new LinkedHashSet<>(4);
                 correct = ra.nextInt(4);
-                int incorrect;
-                for(int i=0;i<4;i++)
+                HashSet<Integer> ch = new HashSet<>();
+                int incorrect; int c2=0;
+
+                for(int i=0;c2<4;)
                 {
-                    if(i==correct)
-                        ans[i]=name[choose];
+                    if(i==correct && !ch.contains(i)) {
+                       /// ans[i] = name[choose];ch.add(correct);
+                        LHS.add(name[choose]);
+                        i++;
+                    }
+
                     else
                     {
                         incorrect=ra.nextInt(name.length);
@@ -98,10 +107,21 @@ public class MainActivity extends AppCompatActivity {
                         {
                             incorrect=ra.nextInt(name.length);
                         }
-                        ans[i]=name[incorrect];
+                        if(!LHS.contains(incorrect) && !ch.contains(incorrect))
+                        {
+                            LHS.add(name[incorrect]);
+                          //  ans[i] = name[incorrect];
+                            ch.add(incorrect);
+                            i++;
+                        }
                     }
+                    c2++;
 
                 }
+                String[] LHSArray = new String[LHS.size()];
+                LHSArray = LHS.toArray(LHSArray);
+                ans[0]=LHSArray[0];ans[1]=LHSArray[1];ans[2]=LHSArray[2];ans[3]=LHSArray[3];
+
                 button0.setText(ans[0]);
                 button1.setText(ans[1]);
                 button2.setText(ans[2]);
